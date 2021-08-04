@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "product_id": 1,
+      "sku": "12002511",
+      "name": "Asus Test 1",
+      "thumbnail": "/images/product/1.jpg",
+      "original_price": 11000,
+      "saleable": true,
+      "qty": 11
+    },
+    {
+      "product_id": 2,
+      "sku": "13002512",
+      "name": "Asus Test 2",
+      "thumbnail": "/images/product/2.jpg",
+      "original_price": 12000,
+      "saleable": true,
+      "qty": 12
+    },
+    {
+      "product_id": 3,
+      "sku": "14002513",
+      "name": "Asus Test 3",
+      "thumbnail": "/images/product/3.jpg",
+      "original_price": 13000,
+      "saleable": true,
+      "qty": 13
+    }
+  ],
+  "orders": []
+}

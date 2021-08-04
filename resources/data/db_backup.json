@@ -1,0 +1,53 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "sku": "ABC001",
+      "productName": "สลัดผัก",
+      "unitPrice": "120",
+      "thumbnail": "/images/product/1.jpg",
+      "instockQty": 11
+    },
+    {
+      "id": 2,
+      "sku": "ABC002",
+      "productName": "ไก่ทอด",
+      "unitPrice": "90",
+      "thumbnail": "/images/product/2.jpg",
+      "instockQty": 22
+    },
+    {
+      "id": 3,
+      "sku": "ABC003",
+      "productName": "บิงซู",
+      "unitPrice": "200",
+      "thumbnail": "/images/product/3.jpg",
+      "instockQty": 33
+    },
+    {
+      "id": 4,
+      "sku": "ABC004",
+      "productName": "เฟรนฟราย",
+      "unitPrice": "140",
+      "thumbnail": "/images/product/4.jpg",
+      "instockQty": 44
+    },
+    {
+      "id": 5,
+      "sku": "ABC005",
+      "productName": "เค้ก 3 ชั้น",
+      "unitPrice": "200",
+      "thumbnail": "/images/product/5.jpg",
+      "instockQty": 55
+    },
+    {
+      "id": 6,
+      "sku": "ABC006",
+      "productName": "กาแฟ เฮลตี้ฟู้ด",
+      "unitPrice": "140",
+      "thumbnail": "/images/product/6.jpg",
+      "instockQty": 66
+    }
+  ],
+  "orders": []
+}
