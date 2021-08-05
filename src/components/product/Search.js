@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios"
 
 const Search = ({onAdd}) => {
@@ -30,7 +30,7 @@ const Search = ({onAdd}) => {
                 "Content-Type": "application/json",
             }
         }).then(response => {
-            console.log(response.data);
+            // console.log("product >>",response.data);
             setData(response.data)
             setName('');
             setLoading(false);
