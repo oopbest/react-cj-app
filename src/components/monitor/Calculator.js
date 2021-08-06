@@ -7,7 +7,7 @@ const Calculator = ({ totalPrice, orders, onDel}) => {
             <table className="table">
                 <thead className="table-light">
                     <tr>
-                        <td className="text-start">ID</td>
+                        {/* <td className="text-start">ID</td> */}
                         <td className="text-start">รหัสสินค้า</td>
                         <td className="text-start">ชื่อสินค้า</td>
                         <td className="text-center">จำนวน</td>
@@ -17,7 +17,7 @@ const Calculator = ({ totalPrice, orders, onDel}) => {
                 <tbody>
                     { orders.length > 0 ? orders.map( (order) => (
                         <tr key={order.product.product_id} className="text-end title">
-                            <td className="text-start">{order.product.product_id}</td>
+                            {/* <td className="text-start">{order.product.product_id}</td> */}
                             <td className="text-start">{order.product.sku}</td>
                             <td className="text-start">{order.product.name}</td>
                             <td className="text-center">{order.quantity}</td>

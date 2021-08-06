@@ -9,27 +9,35 @@ const Monitor = ({products}) => {
     const [orders, setOrders] = useState([]);
     const [cj, setCj] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [confirm, setConfirm] = useState(false)
-    const [msg, setMsg] = useState('')
+    const [currentSearch, setCurrentSearch] = useState(null)
+    const [defaultQty, setDefaultQty] = useState(1);
 
-    const addtoCart = (product) => {
-        // console.log(product)
+    const addtoCart = (product, reqQty) => {
+        //console.log(product)
+        //console.log('reqQty >>',reqQty)
+
         let findProd = orders.find( (order) => order.product.product_id === product.product_id )
         let findCj = cj.find( (order) => order.product_id === product.product_id )
+
         if(findProd || findCj){
-            const findUpd = {...findProd}
-            const updOrderWithQty = {
-                "product" : findUpd,
-                "quantity" : findProd.quantity++
-            }
-            setOrders(orders.map( (order) => 
-                order.product.product_id === findProd.product_id ? { ...order, updOrderWithQty } : order
+
+            const findProdInCart = orders.find( (order) => order.product.product_id === product.product_id )
+            //let findUpd = {...findProdInCart}
+            let findUpdQty = parseInt(findProdInCart.quantity) + parseInt(reqQty)
+            console.log('findInCart>>',findProdInCart)
+            console.log(findUpdQty)
+            // const updOrderWithQty = {
+            //     "product" : findUpd,
+            //     "quantity" : findUpdQty
+            // }
+            setOrders(orders.map( (order) =>
+                order.product.product_id === findProdInCart.product.product_id ? { ...order, quantity : findUpdQty } : order
             ));
 
             const findUpdCj = {...findCj}
             const updOrderWithQtyCj = {
                 "product_id" : findUpdCj,
-                "qty" : findCj.qty++
+                "qty" : findUpdQty
             }
             setCj(cj.map( (order) => 
                 order.product_id === findProd.product_id ? { ...order, updOrderWithQtyCj } : order
@@ -38,22 +46,25 @@ const Monitor = ({products}) => {
             const prodSelect = {...product}
             const newOrder = {
                 "product" : prodSelect,
-                "quantity" : 1
+                "quantity" : reqQty
             }
             setOrders([...orders, newOrder])
 
             const newOrderCj = {
                 "product_id" : product.product_id,
-                "qty" : 1,
+                "qty" : reqQty,
                 "price" : 0
             }
             setCj([...cj, newOrderCj])
             
         }
         //Summary
-        let orderTotal = totalPrice + parseInt(product.price)
+        let orderTotal = totalPrice + (parseInt(product.price) * parseInt(reqQty))
         setTotalPrice(orderTotal)
     }
+    // console.log('orders>>',orders)
+    // console.log('cj>>',orders)
+
 
     
     const deleteItem = (item) => {
@@ -70,54 +81,29 @@ const Monitor = ({products}) => {
         setTotalPrice(orderTotal)
     }
 
-    const cancelOrder = () => {
-        setTotalPrice(0)
-        setOrders([])
-        setConfirm(false)
+    const onSearchInProgress = (product) => {
+        setCurrentSearch(product)
     }
 
-    const checkoutOrder = () => {
-        // console.log(orders)
-        // console.log(totalPrice)
-
-        if(orders && orders.length > 0){
-            axios({
-                method: 'post',
-                url: 'http://localhost:5000/orders',
-                data: {
-                    orderDate: new Date(),
-                    totalPrice: totalPrice,
-                    orders: orders
-                }
-            })
-            .then(res => {
-                setTotalPrice(0)
-                setOrders([])
-                setConfirm(true)
-                setMsg('The order has been saved successfully')
-            });
-        }else{
-            setTotalPrice(0)
-            setOrders([])
-            setConfirm(true)
-            setMsg('Please select a product')
-        }
+    const clearOrderData = () => {
+        setOrders([])
+        setCj([])
+        setTotalPrice(0)
+        setCurrentSearch(null)
     }
     
     return (
         <div className="container-fluid">
-            {/* {confirm &&
-                <div className="alert alert-secondary title text-end">{msg}</div>} */}
             
             <div className="row">
                 <div className="col-md-6">
-                    <Search onAdd={addtoCart}/>
+                    <Search onAdd={addtoCart} onSearchInProgress={onSearchInProgress} currentSearch={currentSearch} defaultQty={defaultQty} />
                 </div>
                 <div className="col-md-6">
-                    <Calculator totalPrice={totalPrice} orders={orders} onDel={deleteItem} onCancel={cancelOrder} onConfirm={checkoutOrder}/>
+                    <Calculator totalPrice={totalPrice} orders={orders} onDel={deleteItem}/>
                     
-                    <hr />
-                    <CheckoutForm onCancel={cancelOrder} orders={orders} cjOrders={cj}/>
+                    {orders.length > 0 && 
+                        <CheckoutForm orders={orders} cjOrders={cj} onClearData={clearOrderData}/>}
                 </div>
             </div>
         </div>

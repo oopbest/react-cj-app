@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios"
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import Swal from 'sweetalert2'
 
-const CheckoutForm = ({cjOrders}) => {
+const CheckoutForm = ({orders, cjOrders, onClearData}) => {
+
+    //**TELEPHONE FORMAT "xxx-xxx-xxxx"
+    // const phoneRegExp = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+
+    //**TELEPHONE FORMAT no dash
+    const phoneRegExp = /^\(?([0-9]{3})\)?([0-9]{3})?([0-9]{4})$/
+    const zipcodeRegExp = /^\d{5}(-\d{5})?(?!-)$/
 
     //console.log("orders >>",cjOrders)
-
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const validationSchema = Yup.object().shape({
-        // fname: Yup.string().required('Firstname is required'),
-        // lname: Yup.string().required('Lastname is required'),
-        // street: Yup.string().required('Street is required'),
-        // telephone: Yup.number().required('Telephone is required'),
-        // region: Yup.string().required('Region is required'),
-        // city: Yup.string().required('City is required'),
-        // postcode: Yup.number().required('Postcode is required'),
+        fname: Yup.string().required('โปรดระบุ ชื่อ'),
+        lname: Yup.string().required('โปรดระบุ นามสกุล'),
+        street: Yup.string().required('โปรดระบุ ที่อยู่').max(100, 'Max characters 100 digits'),
+        telephone: Yup.string().matches(phoneRegExp, 'ระบุ เบอร์โทรศัพท์ ไม่ถูกต้อง'),
+        region: Yup.string().required('โปรดระบุ จังหวัด'),
+        city: Yup.string().required('โปรดระบุ อำเภอ'),
+        postcode: Yup.string().matches(zipcodeRegExp, 'ระบุ รหัสไปรษณีย์ ไม่ถูกต้อง'),
     });
 
     const {
@@ -30,204 +37,179 @@ const CheckoutForm = ({cjOrders}) => {
         resolver: yupResolver(validationSchema)
     });
 
-    useEffect(() => {
 
-        const apiData = {
-            "currency_id": "THB",
-            "email": "mockup@topvalue.com",
-            "shipping_address": {
-                "firstname": "david",
-                "lastname": "beck",
-                "street": "1111/11 england",
-                "city": "Bangsue",
-                "country_id": "TH",
-                "region": "Bangkok",
-                "postcode": "10800",
-                "telephone": "0882605611"
-            },
-            "items": [
-                {
-                    "product_id": 102839,
-                    "qty": 2,
-                    "price": 0
-                }
-            ]
-        }
-        console.log(apiData)
-
-        axios.request({
-          //--POST
-          method: 'post',
-          //url: 'https://topvalue.me/topvalue_cj/order/refund',
-          url: 'https://topvalue.me/topvalue_cj/order/create',
-          params: JSON.stringify(apiData),
-          headers: {
-            "Content-Type": "application/json",
-          }
-    
-        }).then(response => {
-          console.log(response.data);
-        })
-        .catch(err => console.log(err.response));
-    }, []);
-
-
-    const onSubmit = data => {
+    const onSubmit = (data) => {
         setLoading(true);
         setIsError(false);
         // console.log(data)
         // console.log(JSON.stringify(data, null, 2));
 
-
-        // const apiData = {
-        //     origin: "*",
-        //     credentials: true,
-        //     currency_id: "THB",
-        //     email: "mockup@topvalue.com",
-        //     shipping_address: {
-        //         firstname: data.fname,
-        //         lastname: data.lname,
-        //         street: data.street,
-        //         city: data.city,
-        //         country_id: "TH",
-        //         region: data.region,
-        //         postcode: data.postcode,
-        //         telephone: data.telephone
-        //     },
-        //     items: cjOrders
-        // }
-
         const apiData = {
-            "origin": "*",
-            "credentials": true,
-            "currency_id": "THB",
-            "email": "mockup@topvalue.com",
-            "shipping_address": {
-                "firstname": "david",
-                "lastname": "beck",
-                "street": "1111/11 england",
-                "city": "Bangsue",
-                "country_id": "TH",
-                "region": "Bangkok",
-                "postcode": "10800",
-                "telephone": "0882605611"
+            origin: "*",
+            credentials: true,
+            currency_id: "THB",
+            email: "mockup@topvalue.com",
+            shipping_address: {
+                firstname: data.fname,
+                lastname: data.lname,
+                street: data.street,
+                city: data.city,
+                country_id: "TH",
+                region: data.region,
+                postcode: data.postcode,
+                telephone: data.telephone
             },
-            "items": [
-                {
-                    "product_id": 102839,
-                    "qty": 2,
-                    "price": 0
-                }
-            ]
+            items: cjOrders
         }
 
-        console.log(apiData)
-        axios.request({
-            method: 'post',
-            url: 'https://topvalue.me/topvalue_cj/order/create',
-            params: apiData,
-        }).then(response => {
-            console.log("checkout >>",response.data);
-        })
-        .catch(err => {
-            console.log(err)
-        });
+        // console.log(apiData)
 
+        if(orders && orders.length > 0){
+            axios.request({
+                method: 'post',
+                url: 'https://topvalue.me/topvalue_cj/order/create',
+                params: apiData,
+            }).then(response => {
+                console.log("checkout >>",response.data);
+                reset();
+                setLoading(false);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'รายการสั่งซื้อถูกสร้างเรียบร้อยแล้วโปรดชำระเงินในขั้นตอนถัดไป',
+                    html:
+                        '<p>เลขที่คำสั่งซื้อ : ' + response.data.order_id +'</p>'+
+                        '<p>'+response.data.customer_firstname +' '+ response.data.customer_lastname +'</p>'+
+                        '<p>'+response.data.customer_tel+'</p>',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                })
+                onClearData()
+            })
+            .catch(err => {
+                console.log(err.response)
+                setLoading(false);
+                setIsError(true);
+            });
+        }else{
+            onClearData()
+        }
     };
 
     return ( 
         <div className="checkout-form">
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-group">
-                <label>ชื่อ</label>
-                <input
-                    name="fname"
-                    type="text"
-                    {...register('fname')}
-                    className={`form-control ${errors.fname ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.fname?.message}</div>
+            <hr />
+            <form className="row g-3 mb-5" onSubmit={handleSubmit(onSubmit)}>
+                <div className="col">
+                    <label htmlFor="fname" className="form-label">ชื่อ</label>
+                    <input
+                        name="fname" id="fname"
+                        type="text"
+                        {...register('fname')}
+                        className={`form-control ${errors.fname ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.fname?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>นามสกุล</label>
-                <input
-                    name="lname"
-                    type="text"
-                    {...register('lname')}
-                    className={`form-control ${errors.lname ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.lname?.message}</div>
+                <div className="col">
+                    <label htmlFor="lname" className="form-label">นามสกุล</label>
+                    <input
+                        name="lname" id="lname"
+                        type="text"
+                        {...register('lname')}
+                        className={`form-control ${errors.lname ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.lname?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>ที่อยู่</label>
-                <input
-                    name="street"
-                    type="text"
-                    {...register('street')}
-                    className={`form-control ${errors.street ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.street?.message}</div>
+                <div className="col-12">
+                    <label htmlFor="street" className="form-label">ที่อยู่</label>
+                    <input
+                        name="street" id="street"
+                        type="text"
+                        {...register('street')}
+                        className={`form-control ${errors.street ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.street?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>เบอร์โทร</label>
-                <input
-                    name="telephone"
-                    type="text"
-                    {...register('telephone')}
-                    className={`form-control ${errors.telephone ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.telephone?.message}</div>
+                <div className="col-12">
+                    <label htmlFor="telephone" className="form-label">เบอร์โทร</label>
+                    <input
+                        name="telephone" id="telephone"
+                        type="text"
+                        {...register('telephone')}
+                        className={`form-control ${errors.telephone ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.telephone?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>จังหวัด</label>
-                <input
-                    name="region"
-                    type="text"
-                    {...register('region')}
-                    className={`form-control ${errors.region ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.region?.message}</div>
+                <div className="col-6">
+                    <label htmlFor="region" className="form-label">จังหวัด</label>
+                    <input
+                        name="region" id="region"
+                        type="text"
+                        {...register('region')}
+                        className={`form-control ${errors.region ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.region?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>อำเภอ</label>
-                <input
-                    name="city"
-                    type="text"
-                    {...register('city')}
-                    className={`form-control ${errors.city ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.city?.message}</div>
+                <div className="col-6">
+                    <label htmlFor="city" className="form-label">อำเภอ</label>
+                    <input
+                        name="city" id="city"
+                        type="text"
+                        {...register('city')}
+                        className={`form-control ${errors.city ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.city?.message}</div>
                 </div>
 
-                <div className="form-group">
-                <label>รหัสไปรษณีย์</label>
-                <input
-                    name="postcode"
-                    type="text"
-                    {...register('postcode')}
-                    className={`form-control ${errors.postcode ? 'is-invalid' : ''}`}
-                />
-                <div className="invalid-feedback">{errors.postcode?.message}</div>
+                <div className="col-6">
+                    <label htmlFor="postcode" className="form-label">รหัสไปรษณีย์</label>
+                    <input
+                        name="postcode" id="postcode"
+                        type="text"
+                        {...register('postcode')}
+                        className={`form-control ${errors.postcode ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.postcode?.message}</div>
+                </div>
+                <div className="col-6">
+                    <p className="text-danger pt-4">* โปรดตรวจสอบข้อมูลให้ถูกต้องก่อนยืนยัน</p>
                 </div>
 
-                <div className="form-group">
-                <button type="submit" className="btn btn-primary">
-                    Register
-                </button>
-                <button
-                    type="button"
-                    onClick={reset}
-                    className="btn btn-warning float-right"
-                >
-                    Reset
-                </button>
+                <div className="d-grid gap-2">
+                    <button type="submit" className="btn btn-danger fs-5" disabled={loading}>
+                        {loading && <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                    </div>}
+                        {!loading && <span>ยืนยันรายการสั่งซื้อ</span>}
+                    </button>
+                </div>
+                <div className="d-grid gap-2">
+                    <input type="button" className="btn btn-secondary fs-5" value="ล้างข้อมูล" disabled={loading} onClick={() => {
+                        reset({
+                            fname: "",
+                            lname: "",
+                            street: "",
+                            telephone: "",
+                            region: "",
+                            city: "",
+                            postcode: "",
+                        }, {
+                            keepErrors: true, 
+                            keepDirty: true,
+                            keepIsSubmitted: false,
+                            keepTouched: false,
+                            keepIsValid: false,
+                            keepSubmitCount: false,
+                        });
+                    }} />
                 </div>
             </form>
+            {/* <button className="btn btn-secondary title" onClick={onCancel}>Cancel</button> */}
         </div>
      );
 }

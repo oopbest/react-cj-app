@@ -4,7 +4,7 @@ const Header = () => {
     return ( 
         <div className="container-fluid">
             <div className="row">
-                <div className="col text-left">
+                <div className="col text-left pt-3">
                     <Link className="text-decoration-none" to="/">
                         <img style={{height: 50}} src="/images/logo/logo.svg" alt="" />
                     </Link>
