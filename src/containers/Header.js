@@ -1,33 +1,37 @@
-import { Link } from "react-router-dom";
+import { ReactComponent as Logo } from "../logo.svg";
 
 const Header = () => {
     return ( 
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col text-left pt-3">
-                    <Link className="text-decoration-none" to="/">
-                        <img style={{height: 50}} src="/images/logo/logo.svg" alt="" />
-                    </Link>
-                </div>
-                {/* <div className="col-md-4 text-end">
-                    <ul className="list-inline">
-                        <li className="list-inline-item">
-                            <Link className="text-success text-decoration-none" to="/">หน้าหลัก</Link>
+
+        <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
+            <div className="container-fluid">
+                <Logo className="mt-2 me-2"/>
+                {/* <Link className="navbar-brand fw-bold" to="/">Business Insight</Link>
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <Link className="nav-link active" to="/">ภารรวมทุกช่องทาง</Link>
                         </li>
-                        <li className="list-inline-item">
-                            <Link className="text-success text-decoration-none" to="/orders">รายการสั่งซื้อ</Link>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">การเข้าชม</Link>
                         </li>
-                        <li className="list-inline-item">
-                            <Link className="text-success text-decoration-none" to="/products">รายการสินค้า</Link>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">สินค้า</Link>
                         </li>
-                        <li className="list-inline-item">
-                            <Link className="text-success text-decoration-none" to="/about">เกี่ยวกับเรา</Link>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">ยอดขาย</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">ลูกค้า</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/signup">ลงทะเบียน</Link>
                         </li>
                     </ul>
                 </div> */}
             </div>
-            <hr />
-        </div>
+        </nav>
+
      );
 }
  

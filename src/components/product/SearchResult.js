@@ -19,23 +19,19 @@ const SearchResult = ({currentSearch, onAdd, qtyStart, incrementQty, decrementQt
                         <h5>{currentSearch.name}</h5>
                     </div>
 
-                    <div className="d-flex justify-content-center">
-                    
+                    <div className="d-grid gap-2 col-md-4 mx-auto">
                         <div className="input-group">
-                            <button type="button" className="btn btn-outline-secondary" onClick={ decrementQty }>
+                            <button type="button" className="btn btn-outline-dark" onClick={ decrementQty }>
                                 -
                             </button>
                             <input type="text" className="form-control text-center" namme="quantity" value={ qtyStart } readOnly/>
-                            <button type="button" className="btn btn-outline-secondary" onClick={ incrementQty }>
+                            <button type="button" className="btn btn-outline-dark" onClick={ incrementQty }>
                                 +
                             </button>
+                            {/* <button className='reset' onClick={resetQty}>Reset</button> */}
                         </div>
-                    
-
-                        {/* <button className='reset' onClick={resetQty}>Reset</button> */}
-                        
-
                     </div>
+                    
                     <div className="d-flex justify-content-center p-3">
                         <small className="text-danger">เหลือสินค้าอยู่ {currentStockProd} ชิ้น</small>
                     </div>

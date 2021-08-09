@@ -3,7 +3,7 @@ import { Trash } from 'react-bootstrap-icons';
 const Calculator = ({ totalPrice, orders, onDel}) => {
 
     return ( 
-        <div>
+        <div className="tbl-cart">
             <table className="table">
                 <thead className="table-light">
                     <tr>
@@ -26,7 +26,7 @@ const Calculator = ({ totalPrice, orders, onDel}) => {
                     )) : <tr className="text-center text-secondary title" ><td colSpan="4">ไม่พบสินค้าในตะกร้า</td></tr>}
                 </tbody>
             </table>
-            <h1 className="text-end">{totalPrice}</h1>
+            {/* <h1 className="text-end">{totalPrice}</h1> */}
         </div>
      );
 }

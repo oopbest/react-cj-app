@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Calculator from './monitor/Calculator'
-import axios from 'axios';
 import Search from './product/Search';
 import CheckoutForm from './CheckoutForm';
 import Swal from 'sweetalert2'
@@ -11,20 +10,14 @@ const Monitor = ({products}) => {
     const [cj, setCj] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [currentSearch, setCurrentSearch] = useState(null)
-    const [defaultQty, setDefaultQty] = useState(1);
 
     const addtoCart = (product, reqQty, currentStock) => {
         //console.log(product)
         //console.log('reqQty >>',reqQty)
 
        
-
-
         let findProd = orders.find( (order) => order.product.product_id === product.product_id )
         let findCj = cj.find( (order) => order.product_id === product.product_id )
-
-
-
 
         if(findProd || findCj){
 
@@ -44,9 +37,6 @@ const Monitor = ({products}) => {
             if(stockAvailable < 0){
                 Swal.fire({
                     icon: 'error',
-                    //title: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
-                    // text: 'Something went wrong!',
-                    //footer: '<a href="">Why do I have this issue?</a>'
                     text: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
                     confirmButtonText: 'ตกลง'
                 })
@@ -79,9 +69,6 @@ const Monitor = ({products}) => {
             if(currentStock === 0){
                 Swal.fire({
                     icon: 'error',
-                    //title: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
-                    // text: 'Something went wrong!',
-                    //footer: '<a href="">Why do I have this issue?</a>'
                     text: 'สินค้าหมดชั่วคราว',
                     confirmButtonText: 'ตกลง'
                 })
@@ -107,8 +94,8 @@ const Monitor = ({products}) => {
         let orderTotal = totalPrice + (parseInt(product.price) * parseInt(reqQty))
         setTotalPrice(orderTotal)
     }
-    console.log('orders>>',orders)
-    console.log('cj>>',orders)
+    // console.log('orders>>',orders)
+    // console.log('cj>>',orders)
 
 
     
@@ -142,7 +129,7 @@ const Monitor = ({products}) => {
             
             <div className="row">
                 <div className="col-md-6">
-                    <Search onAdd={addtoCart} onSearchInProgress={onSearchInProgress} currentSearch={currentSearch} defaultQty={defaultQty} />
+                    <Search onAdd={addtoCart} onSearchInProgress={onSearchInProgress} currentSearch={currentSearch} />
                 </div>
                 <div className="col-md-6">
                     <Calculator totalPrice={totalPrice} orders={orders} onDel={deleteItem}/>

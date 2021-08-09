@@ -4,8 +4,8 @@ import SearchResult from "./SearchResult";
 
 const Search = ({ onAdd, onSearchInProgress, currentSearch }) => {
 
-    // const [sku, setSku] = useState('120025142');
-    const [sku, setSku] = useState('');
+    const [sku, setSku] = useState('120025142');
+    // const [sku, setSku] = useState('');
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
 
@@ -60,21 +60,29 @@ const Search = ({ onAdd, onSearchInProgress, currentSearch }) => {
     // console.log(qty)
 
     return (
-        <div className="container p-3">
-            <div className="form-group">
-                {/* <label htmlFor="name">SKU</label> */}
-                <input
-                    type="text"
-                    className="form-control"
-                    id="sku"
-                    placeholder="Enter SKU"
-                    value={sku}
-                    onChange={e => setSku(e.target.value)} />
+        <div className="container">
+            <div className="d-grid gap-2 col-6 mx-auto">
+                <div className="input-group mb-4">
+                    {/* <label htmlFor="name">SKU</label> */}
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="sku"
+                        placeholder="กรอก SKU"
+                        value={sku}
+                        onChange={e => setSku(e.target.value)} />
+                    
+                    <button type="submit" className="btn btn-outline-secondary" onClick={handleSubmit} disabled={loading}>{loading ? <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                                </div> 
+                            : 'ค้นหา'}</button>
+                </div>
             </div>
+            
 
-            {isError && <small className="mt-3 d-inline-block text-danger">Something went wrong. Please try again later.</small>}
+            {isError && <small className="d-inline-block text-danger">Something went wrong. Please try again later.</small>}
 
-            <button type="submit" className="btn btn-primary mt-3" onClick={handleSubmit} disabled={loading}>{loading ? 'Loading...' : 'Submit'}</button>
+            
             
             {currentSearch && 
                 <SearchResult currentSearch={currentSearch} onAdd={onAdd} qtyStart={qty} incrementQty={incrementQty} decrementQty={decrementQty} resetQty={resetQty} />}
