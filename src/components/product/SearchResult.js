@@ -1,15 +1,5 @@
-import { useState } from 'react'
-import { QuantityPicker } from 'react-qty-picker';
-
-const SearchResult = ({currentSearch, onAdd, defaultQty}) => {
-    // console.log('searhResult>>',defaultQty)
-    const [qty, setQty] = useState(1)
-
+const SearchResult = ({currentSearch, onAdd, qtyStart, incrementQty, decrementQty, resetQty}) => {
     const currentStockProd = currentSearch.qty
-    const getPickerQty = (value) =>{
-        // console.log('pickerQty >>',value)
-        setQty(value)
-    }
 
     return ( 
         <div>
@@ -30,14 +20,28 @@ const SearchResult = ({currentSearch, onAdd, defaultQty}) => {
                     </div>
 
                     <div className="d-flex justify-content-center">
-                        <QuantityPicker value={defaultQty} min={1} max={currentStockProd} onChange={getPickerQty} smooth />
+                    
+                        <div className="input-group">
+                            <button type="button" className="btn btn-outline-secondary" onClick={ decrementQty }>
+                                -
+                            </button>
+                            <input type="text" className="form-control text-center" namme="quantity" value={ qtyStart } readOnly/>
+                            <button type="button" className="btn btn-outline-secondary" onClick={ incrementQty }>
+                                +
+                            </button>
+                        </div>
+                    
+
+                        {/* <button className='reset' onClick={resetQty}>Reset</button> */}
+                        
+
                     </div>
                     <div className="d-flex justify-content-center p-3">
                         <small className="text-danger">เหลือสินค้าอยู่ {currentStockProd} ชิ้น</small>
                     </div>
 
                     <div className="mt-3 d-grid gap-2 col-6 mx-auto">
-                        <button className="btn btn-dark fs-4" onClick={ () => onAdd(currentSearch, qty) }>เพิ่มรายการ</button>
+                        <button className="btn btn-dark fs-4" onClick={ () => onAdd(currentSearch, qtyStart, currentStockProd) }>เพิ่มรายการ</button>
                     </div>
                     
                 </div> 

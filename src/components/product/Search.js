@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios"
 import SearchResult from "./SearchResult";
 
-const Search = ({ onAdd, onSearchInProgress, currentSearch, defaultQty }) => {
+const Search = ({ onAdd, onSearchInProgress, currentSearch }) => {
 
-    const [sku, setSku] = useState('120025142');
-    // const [sku, setSku] = useState('');
+    // const [sku, setSku] = useState('120025142');
+    const [sku, setSku] = useState('');
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+
+    const [qty, setQty] = useState(1);
   
     const handleSubmit = () => {
         setLoading(true);
@@ -29,6 +31,7 @@ const Search = ({ onAdd, onSearchInProgress, currentSearch, defaultQty }) => {
             // console.log("product >>",response.data);
             onSearchInProgress(response.data)
             setSku('');
+            setQty(1)
             setLoading(false);
         })
         .catch(err => {
@@ -37,7 +40,24 @@ const Search = ({ onAdd, onSearchInProgress, currentSearch, defaultQty }) => {
             setIsError(true);
         });
     }
-    //console.log('currentSearch>>',currentSearch)
+    // console.log('currentSearch>>',currentSearch)
+
+    const decrementQty = () =>{
+        if(qty > 1){
+            setQty(qty-1);
+        }
+    }
+    const incrementQty = () =>{
+        const currentStockProd = currentSearch.qty
+        if(qty < currentStockProd){
+            setQty(qty+1);
+        }
+        
+    }
+    const resetQty = () =>{
+        setQty(1);
+    }
+    // console.log(qty)
 
     return (
         <div className="container p-3">
@@ -57,7 +77,7 @@ const Search = ({ onAdd, onSearchInProgress, currentSearch, defaultQty }) => {
             <button type="submit" className="btn btn-primary mt-3" onClick={handleSubmit} disabled={loading}>{loading ? 'Loading...' : 'Submit'}</button>
             
             {currentSearch && 
-                <SearchResult currentSearch={currentSearch} onAdd={onAdd} defaultQty={defaultQty}/>}
+                <SearchResult currentSearch={currentSearch} onAdd={onAdd} qtyStart={qty} incrementQty={incrementQty} decrementQty={decrementQty} resetQty={resetQty} />}
             
         </div>
     )

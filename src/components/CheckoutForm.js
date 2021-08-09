@@ -182,8 +182,8 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
 
                 <div className="d-grid gap-2">
                     <button type="submit" className="btn btn-danger fs-5" disabled={loading}>
-                        {loading && <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                        {loading && <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
                                     </div>}
                         {!loading && <span>ยืนยันรายการสั่งซื้อ</span>}
                     </button>

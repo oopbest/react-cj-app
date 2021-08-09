@@ -3,6 +3,7 @@ import Calculator from './monitor/Calculator'
 import axios from 'axios';
 import Search from './product/Search';
 import CheckoutForm from './CheckoutForm';
+import Swal from 'sweetalert2'
 
 const Monitor = ({products}) => {
 
@@ -12,16 +13,47 @@ const Monitor = ({products}) => {
     const [currentSearch, setCurrentSearch] = useState(null)
     const [defaultQty, setDefaultQty] = useState(1);
 
-    const addtoCart = (product, reqQty) => {
+    const addtoCart = (product, reqQty, currentStock) => {
         //console.log(product)
         //console.log('reqQty >>',reqQty)
+
+       
+
 
         let findProd = orders.find( (order) => order.product.product_id === product.product_id )
         let findCj = cj.find( (order) => order.product_id === product.product_id )
 
+
+
+
         if(findProd || findCj){
 
             const findProdInCart = orders.find( (order) => order.product.product_id === product.product_id )
+
+
+            //check stock
+            let stockTotal = currentStock
+            let stockReq = reqQty
+            let inCartQty = findProdInCart.quantity
+            let stockAvailable = (parseInt(stockTotal) - (parseInt(inCartQty) + parseInt(stockReq)))
+            console.log('stockTotal>>',stockTotal)
+            console.log('stockReq>>',stockReq)
+            console.log('qtyCart>>',inCartQty)
+            console.log('stockAvailable>>',stockAvailable)
+
+            if(stockAvailable < 0){
+                Swal.fire({
+                    icon: 'error',
+                    //title: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
+                    // text: 'Something went wrong!',
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                    text: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
+                    confirmButtonText: 'ตกลง'
+                })
+                return false
+            }
+
+
             //let findUpd = {...findProdInCart}
             let findUpdQty = parseInt(findProdInCart.quantity) + parseInt(reqQty)
             console.log('findInCart>>',findProdInCart)
@@ -43,6 +75,19 @@ const Monitor = ({products}) => {
                 order.product_id === findProd.product_id ? { ...order, updOrderWithQtyCj } : order
             ));
         }else{
+            console.log(currentStock)
+            if(currentStock === 0){
+                Swal.fire({
+                    icon: 'error',
+                    //title: 'ไม่สามารถเพิ่มจำนวนสินค้านี้ได้ เนื่องจากคุณเพิ่มสินค้านี้ไว้ในรถเข็นแล้ว '+ inCartQty +' ชิ้น',
+                    // text: 'Something went wrong!',
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                    text: 'สินค้าหมดชั่วคราว',
+                    confirmButtonText: 'ตกลง'
+                })
+                return false
+            }
+
             const prodSelect = {...product}
             const newOrder = {
                 "product" : prodSelect,
@@ -62,8 +107,8 @@ const Monitor = ({products}) => {
         let orderTotal = totalPrice + (parseInt(product.price) * parseInt(reqQty))
         setTotalPrice(orderTotal)
     }
-    // console.log('orders>>',orders)
-    // console.log('cj>>',orders)
+    console.log('orders>>',orders)
+    console.log('cj>>',orders)
 
 
     
