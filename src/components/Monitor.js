@@ -23,16 +23,15 @@ const Monitor = ({products}) => {
 
             const findProdInCart = orders.find( (order) => order.product.product_id === product.product_id )
 
-
             //check stock
             let stockTotal = currentStock
             let stockReq = reqQty
             let inCartQty = findProdInCart.quantity
             let stockAvailable = (parseInt(stockTotal) - (parseInt(inCartQty) + parseInt(stockReq)))
-            console.log('stockTotal>>',stockTotal)
-            console.log('stockReq>>',stockReq)
-            console.log('qtyCart>>',inCartQty)
-            console.log('stockAvailable>>',stockAvailable)
+            // console.log('stockTotal>>',stockTotal)
+            // console.log('stockReq>>',stockReq)
+            // console.log('qtyCart>>',inCartQty)
+            // console.log('stockAvailable>>',stockAvailable)
 
             if(stockAvailable < 0){
                 Swal.fire({
@@ -43,11 +42,11 @@ const Monitor = ({products}) => {
                 return false
             }
 
-
+            //** UPDATE Orders State
             //let findUpd = {...findProdInCart}
             let findUpdQty = parseInt(findProdInCart.quantity) + parseInt(reqQty)
-            console.log('findInCart>>',findProdInCart)
-            console.log(findUpdQty)
+            // console.log('findInCart>>',findProdInCart)
+            // console.log(findUpdQty)
             // const updOrderWithQty = {
             //     "product" : findUpd,
             //     "quantity" : findUpdQty
@@ -56,16 +55,14 @@ const Monitor = ({products}) => {
                 order.product.product_id === findProdInCart.product.product_id ? { ...order, quantity : findUpdQty } : order
             ));
 
-            const findUpdCj = {...findCj}
-            const updOrderWithQtyCj = {
-                "product_id" : findUpdCj,
-                "qty" : findUpdQty
-            }
+            //**UPDATE CJ State
+            const findProdCjInCart = cj.find( (order) => order.product_id === product.product_id )
+            let findUpdCjQty = parseInt(findProdCjInCart.qty) + parseInt(reqQty)
             setCj(cj.map( (order) => 
-                order.product_id === findProd.product_id ? { ...order, updOrderWithQtyCj } : order
+                order.product_id === findProdCjInCart.product_id ? { ...order, qty: findUpdCjQty } : order
             ));
         }else{
-            console.log(currentStock)
+            //console.log('currentStock>>',currentStock)
             if(currentStock === 0){
                 Swal.fire({
                     icon: 'error',
@@ -95,7 +92,7 @@ const Monitor = ({products}) => {
         setTotalPrice(orderTotal)
     }
     // console.log('orders>>',orders)
-    // console.log('cj>>',orders)
+    // console.log('cj>>',cj)
 
 
     

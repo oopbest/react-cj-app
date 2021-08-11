@@ -61,8 +61,8 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
             },
             items: cjOrders
         }
+        //console.log('apiData>>',apiData)
 
-        // console.log(apiData)
 
         if(orders && orders.length > 0){
             axios.request({

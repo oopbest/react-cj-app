@@ -4,8 +4,8 @@ import SearchResult from "./SearchResult";
 
 const Search = ({ onAdd, onSearchInProgress, currentSearch }) => {
 
-    const [sku, setSku] = useState('120025142');
-    // const [sku, setSku] = useState('');
+    // const [sku, setSku] = useState('120025142');
+    const [sku, setSku] = useState('');
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
 
@@ -72,8 +72,8 @@ const Search = ({ onAdd, onSearchInProgress, currentSearch }) => {
                         value={sku}
                         onChange={e => setSku(e.target.value)} />
                     
-                    <button type="submit" className="btn btn-outline-secondary" onClick={handleSubmit} disabled={loading}>{loading ? <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                    <button type="submit" className="btn btn-outline-secondary" onClick={handleSubmit} disabled={loading}>{loading ? <div className="spinner-border spinner-border-sm" role="status">
+                                <span className="visually-hidden">Loading...</span>
                                 </div> 
                             : 'ค้นหา'}</button>
                 </div>
