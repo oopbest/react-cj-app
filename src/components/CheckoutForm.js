@@ -71,6 +71,7 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
                 params: apiData,
             }).then(response => {
                 console.log("checkout >>",response.data);
+                
                 reset();
                 setLoading(false);
                 Swal.fire({
@@ -87,7 +88,22 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
                 onClearData()
             })
             .catch(err => {
-                console.log(err.response)
+                console.log('errorCheckout>>',err.response)
+
+                if(err.response.status === 400){
+                    let products = err.response.data.saleable
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        //title: err.response.data.message,
+                        title: 'แจ้งเตือนสินค้าคงเหลือ',
+                        html: products.map( (prod) => 
+                            '<p>'+ prod.product_id +" คงเหลือ "+ prod.saleable_qty +'</p>'),
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                    })
+                }
+
                 setLoading(false);
                 setIsError(true);
             });
