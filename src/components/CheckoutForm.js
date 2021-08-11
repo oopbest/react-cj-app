@@ -98,7 +98,7 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
                         //title: err.response.data.message,
                         title: 'แจ้งเตือนสินค้าคงเหลือ',
                         html: products.map( (prod) => 
-                            '<p>'+ prod.product_id +" คงเหลือ "+ prod.saleable_qty +'</p>'),
+                            '<p>'+ prod.sku +" "+ prod.name +" คงเหลือ "+ prod.saleable_qty +'</p>'),
                         showCloseButton: true,
                         showConfirmButton: false,
                     })
@@ -106,6 +106,7 @@ const CheckoutForm = ({orders, cjOrders, onClearData}) => {
 
                 setLoading(false);
                 setIsError(true);
+                onClearData()
             });
         }else{
             onClearData()

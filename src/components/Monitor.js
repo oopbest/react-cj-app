@@ -93,8 +93,8 @@ const Monitor = ({products}) => {
         let orderTotal = totalPrice + (parseInt(product.price) * parseInt(reqQty))
         setTotalPrice(orderTotal)
     }
-    console.log('orders>>',orders)
-    console.log('cj>>',cj)
+    // console.log('orders>>',orders)
+    // console.log('cj>>',cj)
 
 
     
